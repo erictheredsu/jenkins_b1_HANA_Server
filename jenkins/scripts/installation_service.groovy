@@ -73,7 +73,7 @@ def main = { ->
 	invoke(SHELL_LINUX, "lib_cleanup_light.sh")
 
 	// install SLD, SBOCOMMON, XApp and B1AH
-	#args.INSTALL_TYPE = "ALL"
+	//args.INSTALL_TYPE = "ALL"
 	args.INSTALL_TYPE = "BASE"
 	invoke(SHELL_LINUX, "lib_install_server.sh")
 	assert args.JOB_RESULT.toBoolean()

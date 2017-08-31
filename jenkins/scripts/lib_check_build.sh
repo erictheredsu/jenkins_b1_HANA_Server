@@ -162,15 +162,18 @@ function extractProduct() {
 		rar x ${PKG_PATH} \
 			"info.txt" \
         		"Packages.Linux" \
-		        "Packages/Server/Upgrader Common" \
-		        "Packages/Client" \
-		        "Packages.x64/Client" \
-		        "Packages/DI API" \
-		        "Packages.x64/DI API" \
-       			"Packages/SAP CRAddin Installation" \
-		        "Packages/Server/ExclDocs" \
-		        "Prerequisites" \
+                        "Packages" \
+                        "Packages.x64" \
+                        "Prerequisites" \
 			${INSTALLER_PKG_NAME}
+	#	        "Packages/Server/Upgrader Common" \
+	#	        "Packages/Client" \
+	#	        "Packages.x64/Client" \
+	#	        "Packages/DI API" \
+	#	        "Packages.x64/DI API" \
+       	#		"Packages/SAP CRAddin Installation" \
+	#	        "Packages/Server/ExclDocs" \
+	#		${INSTALLER_PKG_NAME}
 	fi 
 
 	RESULT=$?
