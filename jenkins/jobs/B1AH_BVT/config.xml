@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.cloudbees.plugins.flow.BuildFlow plugin="build-flow-plugin@0.12">
+  <actions/>
+  <description>B1AH BVT Workflow</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- HANA host (ip address) -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_HOST</name>
+          <description>HANA server IP address (e.g. 10.58.136.166). DO NOT use hostname</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- passwd of root of the HANA server -->
+        <hudson.model.PasswordParameterDefinition>
+          <name>ROOT_PWD</name>
+          <description>passwd of root of the HANA server</description>
+          <defaultValue>lEzpLSOp6hqvvkofshQo74LBIolcUT28sUOV6uTqdYI=</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+
+        <!-- code line -->
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>Please choose the branch you want to perform the following test.</description>
+          <defaultValue>dev</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- HANA instance number -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_INST</name>
+          <description>HANA instance number (e.g. 01)</description>
+          <defaultValue>00</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- HANA user -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_USR</name>
+          <description>HANA user (e.g. SYSTEM)</description>
+          <defaultValue>SYSTEM</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- HANA passwd -->
+        <hudson.model.PasswordParameterDefinition>
+          <name>HDB_PWD</name>
+          <description>HANA passwd (e.g. manager)</description>
+          <defaultValue>RUEGYFAO7iQTtxP6iS7MUCTsnpA5nqA7Hgq9enWw8Uo=</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+
+        <!-- SBOTESTUS -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTUS</name>
+          <description>create a default US company?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- SBOTESTCN -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTCN</name>
+          <description>create a default CN company?</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- SBOTESTDE -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTDE</name>
+          <description>create a default DE company?</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- Windows slave -->
+        <hudson.model.StringParameterDefinition>
+          <name>SLAVE_WIN32</name>
+          <description></description>
+          <defaultValue>10.58.121.145</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- applicant display name -->
+        <hudson.model.StringParameterDefinition>
+          <name>APPLICANT_NAME</name>
+          <description></description>
+          <defaultValue>B1AH BOT (by scheduler)</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        
+        <!-- applicant email -->
+        <hudson.model.StringParameterDefinition>
+          <name>APPLICANT_EMAIL</name>
+          <description></description>
+          <defaultValue>miles.chen01@sap.com</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <assignedNode>master</assignedNode>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>@hourly</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders/>
+  <publishers>
+    
+  </publishers>
+  <buildWrappers/>
+  <icon/>
+  <dsl>
+out.println "======================= Start ======================="
+
+def env = build.properties.environment
+def jobName = env.JOB_NAME.toLowerCase()
+def branch = params.BRANCH
+def libcore = "${env.TOOLS_HOME}/artifacts/scripts/lib_core.groovy"
+def script = "${env.TOOLS_HOME}/artifacts/scripts/${jobName}.groovy"
+
+def runInContext(Object context, String script) {
+    Closure cl = (Closure) new GroovyShell().evaluate("{->$script}")
+    cl.delegate = context
+    cl.resolveStrategy = Closure.DELEGATE_FIRST
+    cl()
+}
+
+out.println "execute groovy script -> $script"
+runInContext(this, new File(libcore).text + new File(script).text)
+
+out.println "======================= End ======================="
+  </dsl>
+  <buildNeedsWorkspace>true</buildNeedsWorkspace>
+</com.cloudbees.plugins.flow.BuildFlow>

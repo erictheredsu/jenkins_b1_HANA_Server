@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- node -->
+        <org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition plugin="nodelabelparameter@1.5.1">
+          <name>JOB_EXECUTOR</name>
+          <description>job executor</description>
+          <allowedSlaves/>
+          <defaultSlaves>
+            <string>master</string>
+          </defaultSlaves>
+          <triggerIfResult>allowMultiSelectionForConcurrentBuilds</triggerIfResult>
+          <allowMultiNodeSelection>true</allowMultiNodeSelection>
+          <triggerConcurrentBuilds>true</triggerConcurrentBuilds>
+          <ignoreOfflineNodes>false</ignoreOfflineNodes>
+          <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
+        </org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition>
+
+        <!-- script -->
+        <hudson.model.StringParameterDefinition>
+          <name>JOB_SCRIPT</name>
+          <description></description>
+          <defaultValue>blank.sh</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- code line -->
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BRANCH</name>
+          <description>Please choose the branch you want to perform the following test.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>dev</string>
+              <string>9.1_COR</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>true</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>
+# check whether the script is running on the jenkins master node
+if [ "${LOCAL_HOST}" != "$(ifconfig | grep -A 1 'eth0' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1)" ]; then
+  # check whether the tools_home dir exist
+  if [ ! -d ${TOOLS_HOME} ]; then
+    mkdir -p ${TOOLS_HOME}
+  fi
+  # check whether the tools_home dir has been mounted to master's tools_home
+  if ! mount | grep ${TOOLS_HOME} > /dev/null; then
+      mount -o guest ${JENKINS_SHF} ${TOOLS_HOME}
+  elif ! mount | grep "${JENKINS_SHF} on ${TOOLS_HOME}" > /dev/null; then
+      umount -l ${TOOLS_HOME}
+      mount -o guest ${JENKINS_SHF} ${TOOLS_HOME}
+  fi
+fi
+
+cc=${TOOLS_HOME}/artifacts/scripts/${JOB_SCRIPT}
+echo "execute bash script -> $cc"  
+bash -x ${cc}
+      </command>
+    </hudson.tasks.Shell>
+  </builders>
+</project>

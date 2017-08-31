@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- node -->
+        <org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition plugin="nodelabelparameter@1.5.1">
+          <name>JOB_EXECUTOR</name>
+          <description>job executor</description>
+          <allowedSlaves/>
+          <defaultSlaves>
+            <string>master</string>
+          </defaultSlaves>
+          <triggerIfResult>allowMultiSelectionForConcurrentBuilds</triggerIfResult>
+          <allowMultiNodeSelection>true</allowMultiNodeSelection>
+          <triggerConcurrentBuilds>true</triggerConcurrentBuilds>
+          <ignoreOfflineNodes>false</ignoreOfflineNodes>
+          <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
+        </org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition>
+
+        <!-- script -->
+        <hudson.model.StringParameterDefinition>
+          <name>JOB_SCRIPT</name>
+          <description></description>
+          <defaultValue>blank.bat</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- code line -->
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BRANCH</name>
+          <description>Please choose the branch you want to perform the following test.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>dev</string>
+              <string>9.1_COR</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>true</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>
+if not exist x: (
+  net use x: \\%LOCAL_HOST%\jenkins
+)
+
+set cc=x:\artifacts\scripts\%JOB_SCRIPT%
+echo "execute batch script -> %cc%"  
+call %cc%
+      </command>
+    </hudson.tasks.BatchFile>
+  </builders>
+</project>

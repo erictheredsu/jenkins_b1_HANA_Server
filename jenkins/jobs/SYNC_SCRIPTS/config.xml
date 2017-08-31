@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties> 
+  </properties>
+
+  <scm class="hudson.plugins.perforce.PerforceSCM" plugin="perforce@1.3.27">
+    <configVersion>1</configVersion>
+    <p4User>b1local</p4User>
+    <p4Passwd>0f0kqlwaXou1ZJ8lwhGpjfgqxHBALA==</p4Passwd>
+    <p4Port>10.58.114.106:3230</p4Port>
+    <p4Client>JENKINS_TA_SERVER_SCRIPTS</p4Client>
+    <projectPath>//BUSMB_B1/TestAutomation_B1/B1_HANAInnovation_DEV/jenkins/... //JENKINS_TA_SERVER_SCRIPTS/BUSMB_B1/TestAutomation_B1/B1_HANAInnovation_DEV/jenkins/...</projectPath>
+    <projectOptions>noallwrite clobber nocompress unlocked nomodtime rmdir</projectOptions>
+    <p4SysDrive></p4SysDrive>
+    <p4SysRoot></p4SysRoot>
+    <p4Tool>p4</p4Tool>
+    <useClientSpec>false</useClientSpec>
+    <useStreamDepot>false</useStreamDepot>
+    <forceSync>true</forceSync>
+    <alwaysForceSync>true</alwaysForceSync>
+    <dontUpdateServer>false</dontUpdateServer>
+    <disableAutoSync>false</disableAutoSync>
+    <disableChangeLogOnly>false</disableChangeLogOnly>
+    <disableSyncOnly>false</disableSyncOnly>
+    <showIntegChanges>false</showIntegChanges>
+    <useOldClientName>false</useOldClientName>
+    <createWorkspace>true</createWorkspace>
+    <updateView>true</updateView>
+    <dontRenameClient>false</dontRenameClient>
+    <updateCounterValue>false</updateCounterValue>
+    <dontUpdateClient>false</dontUpdateClient>
+    <exposeP4Passwd>false</exposeP4Passwd>
+    <wipeBeforeBuild>false</wipeBeforeBuild>
+    <quickCleanBeforeBuild>false</quickCleanBeforeBuild>
+    <restoreChangedDeletedFiles>false</restoreChangedDeletedFiles>
+    <wipeRepoBeforeBuild>false</wipeRepoBeforeBuild>
+    <firstChange>-1</firstChange>
+    <fileLimit>0</fileLimit>
+    <excludedFilesCaseSensitivity>true</excludedFilesCaseSensitivity>
+    <p4Ticket>DA6D6F16CC4DC9D3A3630EB29B67CE5B</p4Ticket>
+    <slaveClientNameFormat>${basename}-${hash}</slaveClientNameFormat>
+    <lineEndValue>local</lineEndValue>
+    <useViewMask>true</useViewMask>
+    <useViewMaskForPolling>true</useViewMaskForPolling>
+    <useViewMaskForSyncing>false</useViewMaskForSyncing>
+    <useViewMaskForChangeLog>false</useViewMaskForChangeLog>
+    <pollOnlyOnMaster>false</pollOnlyOnMaster>
+  </scm>
+
+  <assignedNode>master</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>
+# copy script to tools_home
+cp -rf $WORKSPACE/BUSMB_B1/TestAutomation_B1/B1_HANAInnovation_DEV/jenkins/* $TOOLS_HOME/artifacts/
+      </command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

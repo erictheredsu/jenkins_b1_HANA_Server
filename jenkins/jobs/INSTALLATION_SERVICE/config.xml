@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<com.cloudbees.plugins.flow.BuildFlow plugin="build-flow-plugin@0.12">
+  <actions/>
+  <description>Installation Service Workflow</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- HANA host (ip address) -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_HOST</name>
+          <description>HANA server IP address (e.g. 10.58.136.166). DO NOT use hostname</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- passwd of root of the HANA server -->
+        <hudson.model.PasswordParameterDefinition>
+          <name>ROOT_PWD</name>
+          <description>passwd of root of the HANA server</description>
+          <defaultValue>iBNJqpsJilgBF6oBarOyNA==</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+
+        <!-- code line -->
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BRANCH</name>
+          <description>Please choose the branch you want to perform the following test.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>dev</string>
+              <string>9.1_DEV</string>
+              <string>9.1_COR</string>
+              <string>9.01_DEV</string>
+              <string>9.01_COR</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+
+        <!-- HANA instance number -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_INST</name>
+          <description>HANA instance number (e.g. 01)</description>
+          <defaultValue>00</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- HANA user -->
+        <hudson.model.StringParameterDefinition>
+          <name>HDB_USR</name>
+          <description>HANA user (e.g. SYSTEM)</description>
+          <defaultValue>SYSTEM</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- HANA passwd -->
+        <hudson.model.PasswordParameterDefinition>
+          <name>HDB_PWD</name>
+          <description>HANA passwd (e.g. manager)</description>
+          <defaultValue>ivvWMSAVC6IONV0xmVVKoYLBIolcUT28sUOV6uTqdYI=</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+
+        <!-- specific build path -->
+        <hudson.model.StringParameterDefinition>
+          <name>BUILD_PKG</name>
+          <description>[Optional] Set the build package for specific installation or leave it empty to use the latest build on build server 10.58.6.49.&lt;br/&gt;&lt;br/&gt;
+Input the package name directly under \\10.58.6.49\builds_cn\SBO\{branch}\ (e.g. &lt;b&gt;910.101.00_CNPVG50839504BV_SBO_EMEA_9.1_COR_020514_102409_1325684.HANA&lt;/b&gt;)</description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- SBOTESTUS -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTUS</name>
+          <description>create a default US company?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- SBOTESTCN -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTCN</name>
+          <description>create a default CN company?</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- SBOTESTDE -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>SBOTESTDE</name>
+          <description>create a default DE company?</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- Windows slave -->
+        <hudson.model.StringParameterDefinition>
+          <name>SLAVE_WIN32</name>
+          <description></description>
+          <defaultValue>10.58.121.145</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- applicant display name -->
+        <hudson.model.StringParameterDefinition>
+          <name>APPLICANT_NAME</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+        
+        <!-- applicant email -->
+        <hudson.model.StringParameterDefinition>
+          <name>APPLICANT_EMAIL</name>
+          <description></description>
+          <defaultValue></defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <assignedNode>master</assignedNode>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>true</concurrentBuild>
+  <builders/>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.38.1">
+      <recipientList>$DEFAULT_RECIPIENTS</recipientList>
+      <configuredTriggers>
+
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <recipientList>$APPLICANT_EMAIL,cc:miles.chen01@sap.com,cc:qing.liu03@sap.com,cc:jiaqi.yu@sap.com,cc:zhenjun.wang@sap.com</recipientList>
+            <subject>SAP Business One (${BRANCH}) Setup Failed on ${HDB_HOST}:3${HDB_INST}15 (#${BUILD_NUMBER})</subject>
+            <body>${JELLY_SCRIPT,template="setup-failure"}</body>
+            <recipientProviders/>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo></replyTo>
+            <contentType>text/html</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+
+        <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+          <email>
+            <recipientList>$APPLICANT_EMAIL,cc:miles.chen01@sap.com,cc:qing.liu03@sap.com,cc:jiaqi.yu@sap.com,cc:zhenjun.wang@sap.com</recipientList>
+            <subject>SAP Business One (${BRANCH}) Setup Successfully on ${HDB_HOST}:3${HDB_INST}15 (#${BUILD_NUMBER})</subject>
+            <body>${JELLY_SCRIPT,template="setup-success"}</body>
+            <recipientProviders/>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo></replyTo>
+            <contentType>text/html</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers/>
+  <icon/>
+  <dsl>
+out.println "======================= Start ======================="
+
+def env = build.properties.environment
+def jobName = env.JOB_NAME.toLowerCase()
+def branch = params.BRANCH
+def libcore = "${env.TOOLS_HOME}/artifacts/scripts/lib_core.groovy"
+def script = "${env.TOOLS_HOME}/artifacts/scripts/${jobName}.groovy"
+
+def runInContext(Object context, String script) {
+    Closure cl = (Closure) new GroovyShell().evaluate("{->$script}")
+    cl.delegate = context
+    cl.resolveStrategy = Closure.DELEGATE_FIRST
+    cl()
+}
+
+out.println "execute groovy script -> $script"
+runInContext(this, new File(libcore).text + new File(script).text)
+
+out.println "======================= End ======================="
+	</dsl>
+  <buildNeedsWorkspace>true</buildNeedsWorkspace>
+</com.cloudbees.plugins.flow.BuildFlow>

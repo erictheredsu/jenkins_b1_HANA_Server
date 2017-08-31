@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="dist" name="obs">
+
+	<property name="component.name" value="obs" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.7" />
+	<property name="source" value="1.7" />
+  
+	<path id="project.classpath">
+		<fileset dir="WEB-INF/lib">
+			<include name="com4j-all-*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="com4j/tlbimp/ant.properties">
+    	<classpath refid="project.classpath" />
+	</taskdef>
+
+	<target name="clean">
+		<delete dir="bin" />
+		<delete file="${component.name}.war" />
+		<delete file="WEB-INF/lib/${component.name}.jar" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="bin" />
+	</target>
+
+	<!-- compile DIAPI type library -->
+	<target name="tlbimp">
+		<tlbimp destdir="bin" renameGetterAndSetters="true">
+			<lib libid="FC8030BE-F5D2-4b8e-8F92-44228FE30090" package="com.sap.businessone.obs" />
+		</tlbimp>
+	</target>
+
+	<target name="build" depends="init,tlbimp">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}" encoding="Cp1252">
+			<src path="bin" />
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<!-- create war package -->
+	<target name="dist" depends="build">
+		<jar destfile="WEB-INF/lib/${component.name}.jar" basedir="bin" />
+		<war webxml="WEB-INF/web.xml" destfile="${component.name}.war">
+			<fileset dir=".">
+				<exclude name="**/sample_*.groovy" />
+				<exclude name="**/*.dll" />
+				<exclude name="build.xml" />
+				<exclude name="bin/" />
+			</fileset>
+		</war>
+	</target>
+
+	<!-- create com4j all in one package -->
+	<target name="com4j">
+		<jar id="files" jarfile="WEB-INF/lib/com4j-all-2.0.1.jar">
+		    <zipfileset src="WEB-INF/lib/args4j-2.0.1.jar"/>
+		    <zipfileset src="WEB-INF/lib/com4j.jar"/>
+		    <zipfileset src="WEB-INF/lib/tlbimp.jar"/>
+		</jar>
+	</target>
+
+</project>

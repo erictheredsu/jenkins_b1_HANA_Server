@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- node -->
+        <org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition plugin="nodelabelparameter@1.5.1">
+          <name>JOB_EXECUTOR</name>
+          <description>job executor</description>
+          <allowedSlaves/>
+          <defaultSlaves>
+            <string>master</string>
+          </defaultSlaves>
+          <triggerIfResult>multiSelectionDisallowed</triggerIfResult>
+          <allowMultiNodeSelection>false</allowMultiNodeSelection>
+          <triggerConcurrentBuilds>false</triggerConcurrentBuilds>
+          <ignoreOfflineNodes>false</ignoreOfflineNodes>
+          <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
+        </org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition>
+
+        <!-- script -->
+        <hudson.model.StringParameterDefinition>
+          <name>JOB_SCRIPT</name>
+          <description></description>
+          <defaultValue>blank.sh</defaultValue>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- code line -->
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BRANCH</name>
+          <description>Please choose the branch you want to perform the following test.</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>dev</string>
+              <string>9.1_DEV</string>
+              <string>9.01_DEV</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+
+  <scm class="hudson.plugins.perforce.PerforceSCM" plugin="perforce@1.3.27">
+    <configVersion>1</configVersion>
+    <p4User>b1local</p4User>
+    <p4Passwd>0f0kqlwaXou1ZJ8lwhGpjfgqxHBALA==</p4Passwd>
+    <p4Port>10.58.114.106:3230</p4Port>
+    <p4Client>JENKINS_TA_B1AH_${BRANCH}</p4Client>
+    <projectPath>//BUSMB_B1/SBO/${BRANCH}/BuildBuilder/RPM/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/BuildBuilder/RPM/...
+//BUSMB_B1/SBO/${BRANCH}/BuildBuilder/Binaries/7Zip/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/BuildBuilder/Binaries/7Zip/...
+//BUSMB_B1/SBO/${BRANCH}/BuildBuilder/Binaries/nodejs/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/BuildBuilder/Binaries/nodejs/...
+//BUSMB_B1/SBO/${BRANCH}/Components/XApp/Framework/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Components/XApp/Framework/...
+//BUSMB_B1/SBO/${BRANCH}/Source/Client/Cockpit/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/Client/Cockpit/...
+//BUSMB_B1/SBO/${BRANCH}/Source/Client/XmlResources/...  //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/Client/XmlResources/...
+//BUSMB_B1/SBO/${BRANCH}/Source/ThirdParty/XmlResourceTools/...  //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/ThirdParty/XmlResourceTools/...
+//BUSMB_B1/SBO/${BRANCH}/Source/.../*.rc  //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/.../*.rc
+//BUSMB_B1/SBO/${BRANCH}/Source/.../__SBO_Version.h  //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/.../__SBO_Version.h
+
+//BUSMB_B1/SBO/${BRANCH}/Source/Infrastructure/B1analysis/... //JENKINS_TA_B1AH_${BRANCH}/BUSMB_B1/SBO/${BRANCH}/Source/Infrastructure/B1analysis/...</projectPath>
+    <projectOptions>noallwrite clobber nocompress unlocked nomodtime rmdir</projectOptions>
+    <p4SysDrive></p4SysDrive>
+    <p4SysRoot></p4SysRoot>
+    <p4Tool>p4</p4Tool>
+    <useClientSpec>false</useClientSpec>
+    <useStreamDepot>false</useStreamDepot>
+    <forceSync>true</forceSync>
+    <alwaysForceSync>false</alwaysForceSync>
+    <dontUpdateServer>false</dontUpdateServer>
+    <disableAutoSync>false</disableAutoSync>
+    <disableChangeLogOnly>false</disableChangeLogOnly>
+    <disableSyncOnly>false</disableSyncOnly>
+    <showIntegChanges>false</showIntegChanges>
+    <useOldClientName>false</useOldClientName>
+    <createWorkspace>true</createWorkspace>
+    <updateView>true</updateView>
+    <dontRenameClient>false</dontRenameClient>
+    <updateCounterValue>false</updateCounterValue>
+    <dontUpdateClient>false</dontUpdateClient>
+    <exposeP4Passwd>false</exposeP4Passwd>
+    <wipeBeforeBuild>false</wipeBeforeBuild>
+    <quickCleanBeforeBuild>false</quickCleanBeforeBuild>
+    <restoreChangedDeletedFiles>false</restoreChangedDeletedFiles>
+    <wipeRepoBeforeBuild>false</wipeRepoBeforeBuild>
+    <firstChange>-1</firstChange>
+    <fileLimit>0</fileLimit>
+    <excludedFilesCaseSensitivity>true</excludedFilesCaseSensitivity>
+    <p4Ticket>DA6D6F16CC4DC9D3A3630EB29B67CE5B</p4Ticket>
+    <slaveClientNameFormat>${basename}-${hash}</slaveClientNameFormat>
+    <lineEndValue>local</lineEndValue>
+    <useViewMask>true</useViewMask>
+    <useViewMaskForPolling>true</useViewMaskForPolling>
+    <useViewMaskForSyncing>false</useViewMaskForSyncing>
+    <useViewMaskForChangeLog>false</useViewMaskForChangeLog>
+    <pollOnlyOnMaster>false</pollOnlyOnMaster>
+  </scm>
+
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>
+echo "sync code completed"
+# temporary disable findbugs
+# export JAVA_HOME=/home/jenkins/jdk
+# $TOOLS_HOME/findbugs-3.0.0-rc2/bin/findbugs -project b1ah.fbp -effort:min -output b1ah_findbugs.xml
+      </command>
+    </hudson.tasks.Shell>
+    <!-- temporary disable jslint -->
+    <!-- <com.boxuk.jenkins.jslint.JSLintBuilder plugin="jslint@0.8.2">
+      <includePattern>**/IMCC/WebContent/scripts/**/*.js</includePattern>
+      <excludePattern></excludePattern>
+      <logfile>b1ah_jslint.xml</logfile>
+      <arguments></arguments>
+    </com.boxuk.jenkins.jslint.JSLintBuilder> -->
+  </builders>
+  <publishers>
+    <!-- temporary disable jslint and findbugs reports -->
+    <!-- <hudson.plugins.checkstyle.CheckStylePublisher plugin="checkstyle@3.39">
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <thresholdLimit>low</thresholdLimit>
+      <pluginName>[CHECKSTYLE] </pluginName>
+      <defaultEncoding></defaultEncoding>
+      <canRunOnFailed>false</canRunOnFailed>
+      <useStableBuildAsReference>false</useStableBuildAsReference>
+      <useDeltaValues>false</useDeltaValues>
+      <thresholds plugin="analysis-core@1.57">
+        <unstableTotalAll></unstableTotalAll>
+        <unstableTotalHigh></unstableTotalHigh>
+        <unstableTotalNormal></unstableTotalNormal>
+        <unstableTotalLow></unstableTotalLow>
+        <failedTotalAll></failedTotalAll>
+        <failedTotalHigh></failedTotalHigh>
+        <failedTotalNormal></failedTotalNormal>
+        <failedTotalLow></failedTotalLow>
+      </thresholds>
+      <shouldDetectModules>false</shouldDetectModules>
+      <dontComputeNew>true</dontComputeNew>
+      <doNotResolveRelativePaths>false</doNotResolveRelativePaths>
+      <pattern>b1ah_jslint.xml</pattern>
+    </hudson.plugins.checkstyle.CheckStylePublisher>
+    <hudson.plugins.findbugs.FindBugsPublisher plugin="findbugs@4.56">
+      <healthy></healthy>
+      <unHealthy></unHealthy>
+      <thresholdLimit>low</thresholdLimit>
+      <pluginName>[FINDBUGS] </pluginName>
+      <defaultEncoding></defaultEncoding>
+      <canRunOnFailed>false</canRunOnFailed>
+      <useStableBuildAsReference>false</useStableBuildAsReference>
+      <useDeltaValues>false</useDeltaValues>
+      <thresholds plugin="analysis-core@1.57">
+        <unstableTotalAll></unstableTotalAll>
+        <unstableTotalHigh></unstableTotalHigh>
+        <unstableTotalNormal></unstableTotalNormal>
+        <unstableTotalLow></unstableTotalLow>
+        <failedTotalAll></failedTotalAll>
+        <failedTotalHigh></failedTotalHigh>
+        <failedTotalNormal></failedTotalNormal>
+        <failedTotalLow></failedTotalLow>
+      </thresholds>
+      <shouldDetectModules>false</shouldDetectModules>
+      <dontComputeNew>true</dontComputeNew>
+      <doNotResolveRelativePaths>true</doNotResolveRelativePaths>
+      <pattern>b1ah_findbugs.xml</pattern>
+      <isRankActivated>false</isRankActivated>
+      <excludePattern></excludePattern>
+      <includePattern></includePattern>
+    </hudson.plugins.findbugs.FindBugsPublisher> -->
+  </publishers>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,423 @@
+﻿<j:set var="spc" value="&amp;nbsp;&amp;nbsp;" />
+<j:set var="buildenv" value="${build.getEnvironment(listener)}"/>
+
+<html>
+<head>
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-weight: inherit;
+            font-style: inherit;
+            font-size: 100%;
+            font-family: inherit;
+            vertical-align: baseline;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        caption,
+        th,
+        td {
+            text-align: left;
+            font-weight: normal;
+        }
+
+        table,
+        td,
+        th {
+            vertical-align: middle;
+        }
+
+        blockquote:before,
+        blockquote:after,
+        q:before,
+        q:after {
+            content: "";
+        }
+
+        blockquote,
+        q {
+            quotes: "" "";
+        }
+
+        a img {
+            border: none;
+        }
+
+        body {
+            margin: 10px;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            font: 14px/22px "adelle", Georgia, sans-serif;
+            font-size-adjust: none;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: normal;
+        }
+
+        a {
+            color: #369;
+        }
+
+        #container {
+            width: 922px;
+            margin: 0 auto;
+        }
+
+        #header {
+            border-bottom: 3px solid rgba(0,0,0,0.10);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+            #header #logo {
+                color: #111;
+                font-size: 25px;
+                font-weight: bold;
+                padding: 10px 0;
+                text-decoration: none;
+            }
+
+
+        #content {
+            padding: 30px 30px 20px 30px;
+            min-height: 100px;
+            width: 600px;
+            background: #fff;
+            float: left;
+            border: 1px solid rgba(0,0,0,0.20);
+            -webkit-border-radius: 3px 3px 0 0;
+            -moz-border-radius: 3px 3px 0 0;
+            border-radius: 3px 3px 0 0;
+            margin-top: 15px;
+            /* From Tripoli  */
+        }
+
+            #content > p {
+                zoom: 1;
+            }
+
+                #content > p:before,
+                #content > p:after {
+                    content: "";
+                    display: table;
+                }
+
+                #content > p:after {
+                    clear: both;
+                }
+
+            #content p {
+                padding: 0 0 0.8125em 0;
+                color: #444;
+            }
+
+                #content p img {
+                    float: left;
+                    margin: 0.5em 0.8125em 0.8125em 0;
+                    padding: 0;
+                }
+
+            #content img {
+                max-width: 100%;
+            }
+
+            #content h1,
+            #content h2,
+            #content h3,
+            #content h4,
+            #content h5,
+            #content h6 {
+                font-weight: bold;
+                line-height: 1.2em;
+            }
+
+            #content h1 {
+                font-size: 2.125em;
+                margin-bottom: 0.4em;
+            }
+
+            #content h2 {
+                font-size: 1.7em;
+                margin: 0.855em 0 0.4em;
+                color: #cc333f;
+            }
+
+            #content h3 {
+                font-size: 1.3em;
+                margin: 0.956em 0 0.4em;
+            }
+
+            #content h4 {
+                font-size: 1.1em;
+                margin: 1.161em 0 0.4em;
+            }
+
+            #content h5,
+            #content h6 {
+                font-size: 1em;
+                font-weight: bold;
+                margin: 1.238em 0 0.4em;
+            }
+
+            #content > h1,
+            #content > h2 {
+                margin-top: 0;
+            }
+
+            #content ul {
+                list-style-position: outside;
+            }
+
+            #content li ul,
+            #content li ol {
+                margin: 0 1.625em;
+            }
+
+            #content ul,
+            #content ol {
+                margin: 0 0 1.625em 1.25em;
+            }
+
+            #content dl {
+                margin: 0 0 1.625em 0;
+            }
+
+                #content dl dt {
+                    font-weight: bold;
+                }
+
+                #content dl dd {
+                    margin-left: 1.625em;
+                }
+
+            #content a {
+                text-decoration: none;
+            }
+
+                #content a:hover {
+                    text-decoration: underline;
+                }
+
+            #content table {
+                margin-bottom: 1.625em;
+                border-collapse: collapse;
+            }
+
+            #content th {
+                font-weight: bold;
+            }
+
+            #content tr,
+            #content th,
+            #content td {
+                margin: 0;
+                padding: 0 1.625em 0 1em;
+                height: 26px;
+            }
+
+            #content tfoot {
+                font-style: italic;
+            }
+
+            #content caption {
+                text-align: center;
+                font-family: Georgia, serif;
+            }
+
+            #content abbr,
+            #content acronym {
+                border-bottom: 1px dotted #000;
+            }
+
+            #content address {
+                margin-top: 1.625em;
+                font-style: italic;
+            }
+
+            #content del {
+                color: #000;
+            }
+
+            #content blockquote {
+                padding: 1em 1em 1.625em 1em;
+                font-family: georgia, serif;
+                font-style: italic;
+            }
+
+                #content blockquote:before {
+                    content: "\201C";
+                    font-size: 3em;
+                    margin-left: -0.625em;
+                    font-family: georgia, serif;
+                    color: #aaa;
+                    line-height: 0;
+                }
+
+                #content blockquote > p {
+                    padding: 0;
+                    margin: 0;
+                }
+
+            #content strong {
+                font-weight: bold;
+            }
+
+            #content em,
+            #content dfn {
+                font-style: italic;
+            }
+
+            #content dfn {
+                font-weight: bold;
+            }
+
+            #content pre,
+            #content code {
+                margin: 0 0 1.625em;
+                white-space: pre;
+            }
+
+            #content pre,
+            #content code,
+            #content tt {
+                font-size: 1em;
+                font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+                line-height: 1.5;
+            }
+
+            #content code {
+                background: #f7f8f1;
+                padding: 1px 2px;
+                border: 1px solid #ccc;
+            }
+
+            #content pre code {
+                padding: 10px 12px;
+                word-wrap: normal;
+                overflow-y: auto;
+            }
+
+            #content tt {
+                display: block;
+                margin: 1.625em 0;
+            }
+
+            #content hr {
+                margin-bottom: 1.625em;
+            }
+
+            #content table {
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                width: 100%;
+            }
+
+            #content th,
+            #content td {
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+            }
+
+            #content th {
+                background: #eee;
+                padding: 7px 10px;
+            }
+
+            #content td {
+                font-size: 0.9em;
+                border-color: #ddd;
+            }
+
+            #content tbody tr:nth-child(2n) {
+                background: #f5f5f5;
+            }
+
+        div.logo {
+            width: 48px;
+            height: 48px;
+            display: inline;
+        }
+
+        td.fixed-width-label {
+            width: 160px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="content">
+            <!--XApp Platform API-->
+            <div>                
+                <h1><img class="logo" src="${rooturl}static/e59dfe28/images/48x48/failure.png" />Installation Failed</h1>
+            </div>
+
+            <!--Overview-->
+            <div>
+                <h2>Overview</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="fixed-width-label">Logs</td>
+                            <td><a href="${rooturl}${build.url}">${rooturl}${build.url}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Applicant</td>
+                            <td>${APPLICANT_NAME}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Parameters-->
+            <div>
+                <h2>Parameters</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <j:forEach var="cc" items="${buildenv.entrySet()}">
+                                <td class="fixed-width-label">${cc.getKey()}</td>
+                                <td>${cc.getValue()}</td>
+                            </j:forEach>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Console Output-->
+            <div>
+                <h2>Console Output</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>#</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Signiture-->
+            <div>
+                <h2>${spc}</h2>
+                <div>
+                    Best Regards
+                    <br />
+                    B1 Dev ToT Athena
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

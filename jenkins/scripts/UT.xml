@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="UT" default="UTcoverage" basedir="/tmp/" xmlns:jacoco="antlib:org.jacoco.ant" >
+	
+	<!-- unit tests and code coverage  -->
+	<property name="src.dir" location="${env.SRC_DIR}/B1analysis/src"/>
+	<property name="result.dir" location="${junit.out}/coverage"/>
+	<property name="result.classes.dir" location="${result.dir}/classes"/>
+	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
+	<property name="junit.output.dir" value="${result.dir}"/>
+	
+	
+	<!-- junit test folders -->
+	<fileset id="commonTest" dir="${common.dir}/test">
+		<include name="**/*.java"/>
+		<exclude name="**/LicenseServiceTest.java"/>
+		<exclude name="**/LicenseManagerTest.java"/>		
+	</fileset>
+	<fileset id="enablementTest" dir="${enablement.dir}/test">
+		<include name="**/*.java"/>
+		<!-- THE FOLLOWING TEST CASE HAS DELETE TABLE ANS SO DISABLE IT-->
+		<exclude name="**/AnalyticCompanyTest.java"/>
+		<exclude name="**/OperationImplTest.java"/>
+		<exclude name="**/CompanyStateServiceImplTest.java"/>
+		<exclude name="**/DefaultOperationStateActivatorTest.java"/>
+		
+		<!--remove the base case and mock class-->
+		<exclude name="**/BaseTest.java"/>
+		<exclude name="**/MockAnalyticCompany.java"/>
+		<exclude name="**/MockCompanyListService.java"/>
+		<exclude name="**/MockModuleChainInitializer.java"/>
+		<exclude name="**/EnablementBaseTest.java"/>
+		<exclude name="**/JDBCTemplateAwareTest.java"/>
+		
+	</fileset>
+	<fileset id="replicationTest" dir="${repServer.dir}/test">
+		<include name="**/*.java"/>
+	</fileset>
+	<fileset id="PervasiveAnalysisTest" dir="${imcc.dir}/PervasiveAnalysis/test">
+		<exclude name="**/*"/>
+	</fileset>
+	<fileset id="EnterpriseSearchTest" dir="${imcc.dir}/EnterpriseSearch/test">
+		<include name="**/*.java"/>
+	</fileset>
+	
+	<!-- junit src folders -->
+	<fileset id="commonSource" dir="${common.dir}/src">
+		<include name="**/*.java"/>
+	</fileset>
+	<fileset id="enablementSource" dir="${enablement.dir}/src">
+		<include name="**/*.java"/>
+	</fileset>
+	<fileset id="replicationSource" dir="${repServer.dir}/src">
+		<include name="**/*.java"/>
+	</fileset>
+	<fileset id="PervasiveAnalysisSource" dir="${imcc.dir}/PervasiveAnalysis/src">
+		<exclude name="**/*"/>
+	</fileset>
+	<fileset id="EnterpriseSearchSource" dir="${imcc.dir}/EnterpriseSearch/src">
+		<include name="**/*.java"/>
+	</fileset>
+	
+	<!-- configuration files -->
+	<fileset id="commonExclude" dir="${common.dir}/test">
+		<exclude name="**/*.java"/>
+	</fileset>
+	<fileset id="enablementExclude" dir="${enablement.dir}/test">
+		<exclude name="**/*.java"/>
+	</fileset>
+	<fileset id="replicationExclude" dir="${repServer.dir}/test">
+		<exclude name="**/*.java"/>
+	</fileset>
+	<fileset id="PervasiveAnalysisExclude" dir="${imcc.dir}/PervasiveAnalysis/test">
+		<exclude name="**/*"/>
+	</fileset>
+	<fileset id="EnterpriseSearchExclude" dir="${imcc.dir}/EnterpriseSearch/test">
+		<exclude name="**/*.java"/>
+	</fileset>
+	
+	<!-- compile UT code -->
+	<target name="compileUT">
+        <mkdir dir="${env.SRC_DIR}/B1analysis/src/testcaseTEMP"/>
+		<copy todir="${env.SRC_DIR}/B1analysis/src/testcaseTEMP" flatten="false" >
+			<fileset dir="${src.dir}">
+				<include name="**/test/**/*.java"/>
+				<exclude name="**/pervasive/**"/>				
+			</fileset>
+		</copy>
+        <mkdir dir="${env.SRC_DIR}/B1analysis/src/bin/testcase"/>
+		<echo message="${env.OUTPUT_DIR}/bin" />
+		<javac target="1.7" source="1.7" destdir="${env.SRC_DIR}/B1analysis/src/bin/testcase" includeantruntime="false">  
+				<src path="${env.SRC_DIR}/B1analysis/src/testcaseTEMP"/>
+				<classpath refid="compile.classpath" />
+				<classpath refid="build.classpath" />
+				<classpath path="${env.OUTPUT_DIR}/bin"/>
+		</javac>
+		<delete dir="${env.SRC_DIR}/B1analysis/src/testcaseTEMP"/>
+		
+		<copy todir="${env.SRC_DIR}/B1analysis/src/bin/testcase">
+			<fileset refid="commonExclude"/>
+			<fileset refid="enablementExclude"/>
+			<fileset refid="replicationExclude"/>
+			<!--fileset refid="PervasiveAnalysisExclude"/-->
+			<fileset refid="EnterpriseSearchExclude"/>
+		</copy>
+	</target>
+	
+	<!-- run UT test cases -->
+	<target name="UnitTest" depends="compileUT">
+		<delete dir="${junit.output.dir}"/>
+        <mkdir dir="${junit.output.dir}"/>
+        <echo message="${result.classes.dir}"/>
+		<jacoco:coverage destfile="${result.exec.file}">
+			<junit fork="yes" printsummary="withOutAndErr" tempdir="/tmp/">
+				<formatter type="xml"/>
+				<batchtest todir="${junit.output.dir}">
+					<fileset refid="commonTest"/>
+					<fileset refid="enablementTest"/>
+					<fileset refid="replicationTest"/>
+					<!-- remove Pervasive from admin console -->
+					<!--fileset refid="PervasiveAnalysisTest"/!-->
+					<fileset refid="EnterpriseSearchTest"/>
+				</batchtest>
+				<classpath refid="compile.classpath"/>
+				<classpath refid="build.classpath"/>
+				<classpath path="${env.OUTPUT_DIR}/bin"/>
+				<classpath path="${env.SRC_DIR}/B1analysis/src/bin/testcase"/>
+			</junit>
+		</jacoco:coverage>
+    </target>
+	<target name="copy_src_class" >
+		<copy todir="${result.dir}/src">
+			<fileset refid="commonSource"/>
+			<fileset refid="enablementSource"/>
+			<fileset refid="replicationSource"/>
+			<!--fileset refid="PervasiveAnalysisSource"/-->
+			<fileset refid="EnterpriseSearchSource"/>
+		</copy>
+		<copy todir="${result.dir}/class">
+			<fileset dir="${env.OUTPUT_DIR}/bin">
+				<include name="com/**/*.class"/>
+				<exclude name="**/*Test.class" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="UTcoverage" depends="UnitTest,copy_src_class"></target>
+
+</project>
