@@ -85,12 +85,7 @@ function main() {
 		fi
 		qset "JOB_RESULT" "$JOB_RESULT"
 	else
-		cp -f ${TEST_NAME}.jtl ${TEST_NAME}.nor.jtl
-		sed -i 's/<responseData class="java.lang.String">.*<\/responseData>$/<responseData class="java.lang.String" \/>/g' ${TEST_NAME}.nor.jtl
-		sed -i '/<responseData class="java.lang.String">/, /<\/responseData>/c <responseData class="java.lang.String" \/>' ${TEST_NAME}.nor.jtl
-		sed -i 's/<queryString class="java.lang.String">.*<\/queryString>$/<queryString class="java.lang.String" \/>/g' ${TEST_NAME}.nor.jtl
-		sed -i '/<queryString class="java.lang.String">/, /<\/queryString>/c <queryString class="java.lang.String" \/>' ${TEST_NAME}.nor.jtl
-		xsltproc "${JMX_PATH}/JMeterLogParser.xsl" ${TEST_NAME}.nor.jtl -o ${TEST_NAME}.html || :
+		xsltproc "${JMX_PATH}/JMeterLogParser.xsl" ${TEST_NAME}.jtl -o ${TEST_NAME}.html || :
 		TEST_RESULT="${PWD}/${TEST_NAME}.jtl"
 		TEST_HTML="${PWD}/${TEST_NAME}.html"
 		qset "TEST_RESULT" "${TEST_RESULT}"

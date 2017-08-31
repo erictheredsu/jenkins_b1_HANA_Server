@@ -18,8 +18,8 @@ PKG_ARRAY=("sbo")
 
 export PATH=$HDB_CLIENT:$PATH
 export REGI_HOST=${HDB_HOST}:3${HDB_INST}15
-export REGI_USER=${HDB_SYSTEM}
-export REGI_PASSWD=${HDB_SYSTEM_PWD}
+export REGI_USER=${HDB_USR}
+export REGI_PASSWD=${HDB_PWD}
 
 function precheck() {
 	if [ ! -d "$HDB_CLIENT" ]; then
@@ -61,7 +61,7 @@ function checkErr() {
 
 function executeSQL() {
 	pushd "$HDB_CLIENT"
-		hdbsql -i "$HDB_INST" -u "$HDB_SYSTEM" -p "$HDB_SYSTEM_PWD" -o "$TMP_RST_FILE" $1
+		hdbsql -i "$HDB_INST" -u "$HDB_USR" -p "$HDB_PWD" -o "$TMP_RST_FILE" $1
 	popd
 }
 
@@ -86,7 +86,6 @@ function cleanupBackupLogs() {
 
 function swipe_db() {
 	# cleanup db brutally without backup/restore
-	removeHDBUser
 	getCompDBs
 	removePKGs
 	removeCommon
@@ -100,7 +99,6 @@ function swipe_db() {
 function cleanupdb() {
 	if [ ! -d "${HDB_BACKUP_DIR}" ] || [ -z "$(ls -A ${HDB_BACKUP_DIR})" ]; then
 		echo "No backup found, start to backup..."
-		removeHDBUser
 		getCompDBs
 		removePKGs
 		removeCommon
@@ -135,12 +133,12 @@ EOF
 	timer=60
 	count=0
 	RST=`su - $HDB_INST_OWNER -c "sapcontrol -nr $HDB_INST -function GetProcessList | grep GREEN | wc -l"`
-	until [ $RST -ge 7 ] || [ $count -gt $timer ]; do
+	until [ $RST -eq 8 ] || [ $count -gt $timer ]; do
 	   	sleep 10
 	   	RST=`su - $HDB_INST_OWNER -c "sapcontrol -nr $HDB_INST -function GetProcessList | grep GREEN | wc -l"`
 	   	let count="${count}+1"
 	done
-	if [ $RST -lt 7 ]; then
+	if [ $RST -ne 8 ]; then
 	    	echo "recovery failed within 10 min..."
 		exit 1
 	fi
@@ -319,37 +317,6 @@ function removePKGs() {
 	done
 	popd
 	rm -rf "$TMP_PKG_DIR"
-}
-
-function removeHDBUser() {
-	if [ -z "${HDB_USR}" ] || [ "${HDB_USR}" == "${HDB_SYSTEM}" ]; then
-		return 0
-	fi
-	hdbsql -i "$HDB_INST" -u "$HDB_SYSTEM" -p "$HDB_SYSTEM_PWD" -a -x -j "drop user ${HDB_USR} cascade" 
-	RESULT=$?
-	return $RESULT
-}
-
-function createHDBUser() {
-	if [ -z "${HDB_USR}" ] || [ "${HDB_USR}" == "${HDB_SYSTEM}" ]; then
-		return 0
-	fi
-	if [ -z "${HDB_PWD}" ]; then
-		echo "!!HDB_PWD has no value"
-		return 1;
-	fi
-	B1ADMIN_EXIST=$(hdbsql -i "$HDB_INST" -u "$HDB_SYSTEM" -p "$HDB_SYSTEM_PWD" -a -x -j "select 1 from USERS where \"USER_NAME\" = '${HDB_USR}'")
-	if [ -n "${B1ADMIN_EXIST}" ]; then
-		hdbsql -i "$HDB_INST" -u "$HDB_SYSTEM" -p "$HDB_SYSTEM_PWD" -a -x -j "drop user ${HDB_USR} cascade" 
-	fi
-	rm -f ${WORKSPACE}/test.sql
-	cp -f /home/jenkins/tools/artifacts/scripts/${BRANCH}_user.sql ${WORKSPACE}/test.sql
-	sed -i s/B1ADMIN/${HDB_USR}/g test.sql
-	sed -i s/Manager1/${HDB_SYSTEM_PWD}/g test.sql
-	sed -i s/Initial0/${HDB_PWD}/g test.sql
-	hdbsql -i "$HDB_INST" -u "$HDB_SYSTEM" -p "$HDB_SYSTEM_PWD" -I ${WORKSPACE}/test.sql
-	RESULT=$?
-	return $RESULT
 }
 
 # mark

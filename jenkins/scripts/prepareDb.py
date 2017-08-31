@@ -16,11 +16,10 @@ from datetime import date
 #SBOTESTUS  ## 0 skip, 1 create
 #SBOTESTCN
 #SBOTESTDE
-#SBOTESTUS2 ## 0 skip, 1 create
 #WS_CLIENT_PATH
 #UPG_DB_NAME  ## for upgrade
 
-dictLocale = {'US':{'DEFAULTLANG':3, 'NAME':'SBOTESTUS', 'DBNAME':'SBOTESTUS', 'COAKEY':'C,US_CoA'},'US2':{'DEFAULTLANG':3, 'locale':'US', 'NAME':'SBOTESTUS2', 'DBNAME':'SBOTESTUS2', 'COAKEY':'C,US_CoA'},'CN':{'DEFAULTLANG':15, 'NAME':'SBOTESTCN', 'DBNAME':'SBOTESTCN', 'COAKEY':'S, 小企业会计准则'}, 'DE':{'DEFAULTLANG':9, 'NAME':'SBOTESTDE', 'DBNAME':'SBOTESTDE', 'COAKEY':'M,DE_IKR'} }
+dictLocale = {'US':{'DEFAULTLANG':3, 'NAME':'SBOTESTUS', 'DBNAME':'SBOTESTUS', 'COAKEY':'C,US_CoA'}, 'CN':{'DEFAULTLANG':15, 'NAME':'SBOTESTCN', 'DBNAME':'SBOTESTCN', 'COAKEY':'S, 小企业会计准则'}, 'DE':{'DEFAULTLANG':9, 'NAME':'SBOTESTDE', 'DBNAME':'SBOTESTDE', 'COAKEY':'M,DE_IKR'} }
 defaultLocale = 'US'
 logPath=os.path.join(os.environ['WORKSPACE'], "logs")
 logFile = os.path.join(logPath, "TA_createDB_build#" + os.environ['BUILD_NUMBER'] + ".log")
@@ -65,7 +64,7 @@ def createCompanyDB():
   
   #dbcredFilePath = createDbcredFile()
   
-  #create US, DE, CN, US2 if required
+  #create US, DE, CN if required
   if os.environ.has_key('SBOTESTUS') and os.environ['SBOTESTUS'] == 'true':
     createCompanyDBwithLocal('US')
     
@@ -74,9 +73,6 @@ def createCompanyDB():
     
   if os.environ.has_key('SBOTESTDE') and os.environ['SBOTESTDE'] == 'true':
     createCompanyDBwithLocal('DE')
-	
-  if os.environ.has_key('SBOTESTUS2') and os.environ['SBOTESTUS2'] == 'true':
-    createCompanyDBwithLocal('US2')
   
   logging.debug('company create done')
   
@@ -139,18 +135,12 @@ def createCompanyIniFile(loc):
     coakey = dictLocale[loc]['COAKEY']
     name = dictLocale[loc]['NAME']
     dbname = dictLocale[loc]['DBNAME']
-    if dictLocale[loc].has_key('locale'):
-      locale = dictLocale[loc]['locale']
-    else:
-      locale = loc
   else:
     lang = dictLocale[defaultLocale]['DEFAULTLANG']
     coakey = dictLocale[defaultLocale]['COAKEY']
     name = dictLocale[defaultLocale]['NAME']
     dbname = dictLocale[defaultLocale]['DBNAME']
-    locale = loc
   
-
   filePath = os.path.join(os.environ['WS_CLIENT_PATH'], 'x64\company.ini')
   iniFile = open(filePath, 'w')
   iniFile.write('CREATE_USING_Package=False;\n')
@@ -160,7 +150,7 @@ def createCompanyIniFile(loc):
   iniFile.write('DB_PASSWORD=' + os.environ['HDB_PWD'] + ';\n')
   iniFile.write('NEWCOMPANYNAME=' + name + ';\n')
   iniFile.write('NEWDBNAME=' + dbname + ';\n')
-  s = 'PERIODSTARTDATE={0}0101;\nCOUNTRY={1};\nDEFAULTLANG={2};\nPERIODSUBTYPE=M;\nPERIODENDDATE={0}1231;\nPERIODNUM=12;\nPERIODNAME={0};\nPERIODCODE={0};\nCOAKEY={3};'.format(currYear, locale, lang, coakey)
+  s = 'PERIODSTARTDATE={0}0101;\nCOUNTRY={1};\nDEFAULTLANG={2};\nPERIODSUBTYPE=M;\nPERIODENDDATE={0}1231;\nPERIODNUM=12;\nPERIODNAME={0};\nPERIODCODE={0};\nCOAKEY={3};'.format(currYear, loc, lang, coakey)
   iniFile.write(s) 
   iniFile.close()
   logging.debug('company.ini created')

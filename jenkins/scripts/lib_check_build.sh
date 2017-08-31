@@ -138,37 +138,6 @@ function findExact() {
 	fi
 	extract_pkg_name=$BUILD_PKG
 }
-function extractProductNew() {
-	EP_LIST_CMD=""
-	rm -rf "${BRANCH_POOL%/}/$extract_pkg_name"
-        rm -rf "${BRANCH_POOL%/}/new"
-        mkdir -p "${BRANCH_POOL%/}/$extract_pkg_name"
-        ln -s "${BRANCH_POOL%/}/$extract_pkg_name" "${BRANCH_POOL%/}/new"
-        pushd "${BRANCH_POOL%/}/$extract_pkg_name"
-        rar x -inul \
-	${PKG_PATH} \
-	"info.txt" \
-	"Packages.Linux" \
-	"Packages/Server/Upgrader Common" \
-	"Packages/Client" \
-	"Packages.x64/Client" \
-	"Packages/DI API" \
-	"Packages.x64/DI API" \
-	"Packages/SAP CRAddin Installation" \
-	"Packages/Server/ExclDocs" \
-	"Prerequisites" \
-	${BRANCH_POOL%/}/$extract_pkg_name
- 	RESULT=$?
-        if [ ${RESULT} -ne 0 ]; then
-                echo "failed to extract b1 product rar package; error code=${RESULT}"
-                return ${RESULT}
-        fi
-
-        cp -rf $CLIENT_PATH ./
-        NEW_BUILD_PATH=$(echo "${BUILDS_SHARE_FOLDER%/}/$BRANCH/$extract_pkg_name" | sed -e 's/\//\\/g')
-	popd
-	
-}
 function extractProduct() {
 	echo "######################### Extracting..."
 
@@ -184,7 +153,25 @@ function extractProduct() {
 	mkdir -p "${BRANCH_POOL%/}/$extract_pkg_name"
 	ln -s "${BRANCH_POOL%/}/$extract_pkg_name" "${BRANCH_POOL%/}/new"
 	pushd "${BRANCH_POOL%/}/$extract_pkg_name"
-	rar x ${EP_LIST_CMD} ${PKG_PATH} ${INSTALLER_PKG_NAME}
+	if [ $BRANCH == "9.1_REL" ] || [ $BRANCH == "9.1_DEV" ] || [ $BRANCH == "9.1_COR" ]; then
+	#rar x ${EP_LIST_CMD} ${PKG_PATH} ${INSTALLER_PKG_NAME}
+	#	rar x ${PKG_PATH}
+		rar x ${EP_LIST_CMD} ${PKG_PATH} ${INSTALLER_PKG_NAME}
+	else
+	#	rar x ${EP_LIST_CMD} ${PKG_PATH} ${INSTALLER_PKG_NAME}
+		rar x ${PKG_PATH} \
+			"info.txt" \
+        		"Packages.Linux" \
+		        "Packages/Server/Upgrader Common" \
+		        "Packages/Client" \
+		        "Packages.x64/Client" \
+		        "Packages/DI API" \
+		        "Packages.x64/DI API" \
+       			"Packages/SAP CRAddin Installation" \
+		        "Packages/Server/ExclDocs" \
+		        "Prerequisites" \
+			${INSTALLER_PKG_NAME}
+	fi 
 
 	RESULT=$?
 	if [ ${RESULT} -ne 0 ]; then
@@ -206,18 +193,10 @@ function main() {
 	checkPool
 	if [ -z "$BUILD_PKG" ]; then
 		findLatest
-		if [ ${BRANCH} == "9.2_COR" ] || [ ${BRANCH} == "9.2_DEV" ] || [ ${BRANCH} == "9.2_REL" ]; then
-			extractProductNew
-		else
-			extractProduct
-		fi
+		extractProduct
 	else
 		findExact
-		if [ ${BRANCH} == "9.2_COR" ] || [ ${BRANCH} == "9.2_DEV" ] || [ ${BRANCH} == "9.2_REL" ]; then
-                        extractProductNew
-                else
-			extractProduct
-		fi
+		extractProduct
 	fi
 	
 	# check result

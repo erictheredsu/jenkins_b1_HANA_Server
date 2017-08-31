@@ -13,8 +13,6 @@ def preInstall = { ->
 	//
 	// returns
 	// 		JOB_RESULT -> true/false
-	invoke(SHELL_LINUX, "lib_check_hdb_user.sh")
-	assert args.JOB_RESULT.toBoolean()	
 	args.INSTALL_TYPE = "BASE"
 	invoke(SHELL_LINUX, "lib_install_server.sh")
 	success = args.JOB_RESULT.toBoolean()
@@ -172,12 +170,10 @@ def syncJmx = { ->
 
 	def bmap = [
 		"dev": 		"9.1",
-		"9.2_COR":	"9.2",
-		"9.2_DEV":	"9.2",
 		"9.1_DEV": 	"9.1",
 		"9.1_COR": 	"9.1",
-		"9.01_DEV": 	"9.01",
-		"9.01_COR": 	"9.01"
+		"9.01_DEV": "9.01",
+		"9.01_COR": "9.01"
 	]
 
 	args.TEST_BRANCH = bmap[args.BRANCH]
@@ -211,7 +207,6 @@ def syncJmx = { ->
 def main = { ->
 	def getSlave = false
 	try{
-
 		args.PROC_NAME = "${env.JOB_NAME}"
 		args.SLAVE_ACTION = "O"
 		invoke(SHELL_LINUX, "lib_slave_pool.sh", "master")
@@ -329,7 +324,7 @@ def main = { ->
 		invoke(SHELL_LINUX, "lib_b1ah_build.sh")
 		
 		// run code scan
-		//codeScan()
+		codeScan()
 		
 
 		//def sld_status = shell("curl https://${args.HDB_HOST}:40000/ControlCenter/ --insecure > /dev/null")
@@ -337,8 +332,7 @@ def main = { ->
 		//	out.println 'error...'
 		//	assert false
 		//}
-		invoke(SHELL_LINUX, "lib_check_hdb_user.sh")
-		assert args.JOB_RESULT.toBoolean()	
+
 		// install xapp and b1ah
 		args.INSTALL_TYPE = "XA"
 		invoke(SHELL_LINUX, "lib_install_server.sh")
@@ -358,10 +352,9 @@ def main = { ->
 		//invoke(SHELL_WIN32, "lib_restart_obs.bat", args.SLAVE_WIN32)
 		
 		// run b1ah and xapp jmx
-		runjmx "SC_B1AH_Sanity", "SC_XApp_Sanity"
-		//, "SC_SLD_Sanity"
+		runjmx "SC_B1AH_Sanity", "SC_XApp_Sanity", "SC_SLD_Sanity"
 		
-		//f utResults = unitTest()		
+		def utResults = unitTest()		
 		
 		// force restart obs after running jmeter
 		//invoke(SHELL_WIN32, "lib_restart_obs.bat", args.SLAVE_WIN32)
@@ -370,7 +363,7 @@ def main = { ->
 		saveEnv()
 
 		//Define in lib_core.groovy
-	    analyzeResponsibility(BUILD_NUMBER,0,["SC_B1AH_Sanity"])
+	    analyzeResponsibility(BUILD_NUMBER,utResults.build.number,["SC_B1AH_Sanity"])
 	    
 		// display each job invocation elapsed
 		showTimeline()	
@@ -388,9 +381,6 @@ def main = { ->
 	finally	{
 		if(getSlave){
 			args.SLAVE_ACTION = "R"
-			env.SLAVE_ACTION = "R"
-			out.println "Try to release slave..."
-			out.println env.SLAVE_ACTION
 			invoke(SHELL_LINUX, "lib_slave_pool.sh", "master")
 		}
 	}

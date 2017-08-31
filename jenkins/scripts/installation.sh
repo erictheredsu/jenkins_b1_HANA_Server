@@ -83,8 +83,7 @@ sed -i --expression="s/%PWD%/$HANA_INSTANCE_PWD/g" "$INSTALL_PROP_PATH"
 sed -i --expression="s/%FEATURES%/$ALL_FEATURES/g" "$INSTALL_PROP_PATH"
 chmod -R +x "$INSTALL_BIN_PATH" 
 pushd "$INSTALL_BIN_PATH"
-inst=$(ls install*)
-bash -x ${inst} --debug -i silent -f install.properties
+./install.bin --debug -i silent -f install.properties
 RESULT=$?
 popd
 rm -rf "$JENKINS_TA_TEMP_DIR"

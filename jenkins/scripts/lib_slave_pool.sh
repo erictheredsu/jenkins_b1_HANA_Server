@@ -85,7 +85,6 @@ function main() {
 	JOB_RESULT=true
 	SAME_LAST_PROC=false
 	SAME_LAST_BRANCH=false
-	echo "SLAVE_ACTION=${SLAVE_ACTION}"
 	if [ "${SLAVE_ACTION}" == "O" ]; then
     	if [ -z ${HDB_HOST} ]; then
         	hasAvaliable=0

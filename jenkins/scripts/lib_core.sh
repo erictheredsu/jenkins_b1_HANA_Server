@@ -38,10 +38,6 @@ function exportTestEnv() {
     export SL_HOST=${HDB_HOST}
     export SL_PORT=50000
     export P4_ROOT_PATH=/home/jenkins/workspace/SYNC_SOURCE
-    if [ -z "${HDB_SYSTEM}" ] ; then
-        export HDB_SYSTEM="${HDB_USR}"
-        export HDB_SYSTEM_PWD= "${HDB_PWD}"
-    fi
 }
 
 # mark

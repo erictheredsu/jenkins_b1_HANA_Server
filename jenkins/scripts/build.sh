@@ -5,14 +5,12 @@
 #BRANCH
 
 # export OUTPUT_DIR=$WORKSPACE/b1ah_release
-SRC_DIR=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Source/Infrastructure
-XAPP_SRC_DIR=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Components/XApp/Framework/tools
-SAML2FILTER_SCRIPT=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Source/Server/SLD/sldService/SAML2SPFilter/build.xml
-SAML2FILTER_DIR=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Source/Server/SLD/sldService/SAML2SPFilter/target
-B1AH_BUILD_SCRIPT=${SRC_DIR}/B1analysis/build/build.xml
-XAPP_BUILD_SCRIPT=${XAPP_SRC_DIR}/build.xml
-XML_RESOURCEWORLD=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Source/Client/XmlResources/ResourceWorld.xml
-XML_TOOL_DIR=${P4_ROOT_PATH}/BUSMB_B1/SBO/${BRANCH}/Source/ThirdParty/XmlResourceTools/Release/
+SRC_DIR=$P4_ROOT_PATH/BUSMB_B1/SBO/${BRANCH}/Source/Infrastructure
+XAPP_SRC_DIR=$P4_ROOT_PATH/BUSMB_B1/SBO/${BRANCH}/Components/XApp/Framework/tools
+B1AH_BUILD_SCRIPT=$SRC_DIR/B1analysis/build/build.xml
+XAPP_BUILD_SCRIPT=$XAPP_SRC_DIR/build.xml
+XML_RESOURCEWORLD=$P4_ROOT_PATH/BUSMB_B1/SBO/${BRANCH}/Source/Client/XmlResources/ResourceWorld.xml
+XML_TOOL_DIR=$P4_ROOT_PATH/BUSMB_B1/SBO/${BRANCH}/Source/ThirdParty/XmlResourceTools/Release/
 
 function buildB1AH() {
     rm -rf $RPM_OUTPUT_PATH
@@ -22,8 +20,6 @@ function buildB1AH() {
     mkdir -p $OUTPUT_DIR
 
     # build b1ah
-    ant -f ${SAML2FILTER_SCRIPT}
-    cp ${SAML2FILTER_DIR}/*.jar ${SRC_DIR}/B1analysis/src/3rdParty/SAML2
     ant -f $B1AH_BUILD_SCRIPT
     if [ $? -ne 0 ]; then
         echo "failed to build b1ah (ant)"
