@@ -52,7 +52,7 @@ function install() {
 	ALL_FEATURES_90=B1ServerToolsSLD,B1ServerToolsMailer,B1ServerToolsLicense,B1ServerToolsXApp,B1ServerSHR,B1ServerCommonDB,B1AnalyticsOlap,B1AnalyticsTomcatEntSearch,B1AnalyticsTomcatDashboard,B1AnalyticsTomcatReplication,B1AnalyticsTomcatConfiguration
 
 	# dev SLD, Server
-	BASE_FEATURES_dev=B1ServerToolsSLD,B1ServerToolsMailer,B1ServerToolsLicense,B1ServerSHR,B1ServerCommonDB
+	BASE_FEATURES_dev= BASE_FEATURES_dev=B1ServerToolsSLD,B1ServerToolsLicense,B1ServerSHR,B1ServerCommonDB,B1ServiceLayerComponent
 
 	# 9.1 SLD, Server
 	BASE_FEATURES_91=B1ServerToolsSLD,B1ServerToolsMailer,B1ServerToolsExtensionManager,B1ServerToolsLicense,B1ServerSHR,B1ServerCommonDB,B1ServiceLayerComponent
@@ -80,7 +80,7 @@ function install() {
 	if [ `echo ${BRANCH} | grep "9.01"` ]; then
 		ALL_FEATURES=${ALL_FEATURES_90}
 		BASE_FEATURES=${BASE_FEATURES_90}
-	elif [ `echo ${BRANCH} | grep "dev"` ]; then
+	 elif [ `echo ${BRANCH} | grep "dev"` ] || [ `echo ${BRANCH} | grep "9.3"` ]; then
 		ALL_FEATURES=${ALL_FEATURES_dev}
 		BASE_FEATURES=${BASE_FEATURES_dev}		
 		sed -i "/^SL_LICENSE_SERVER=/d" "${INSTALL_PROP_PATH}"

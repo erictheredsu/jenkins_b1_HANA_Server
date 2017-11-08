@@ -74,7 +74,7 @@ def main = { ->
 
 	// install SLD, SBOCOMMON, XApp and B1AH
 	//args.INSTALL_TYPE = "ALL"
-	args.INSTALL_TYPE = "BASE"
+	out.println("INSTALL_TYPE: "+args.INSTALL_TYPE)
 	invoke(SHELL_LINUX, "lib_install_server.sh")
 	assert args.JOB_RESULT.toBoolean()
 
